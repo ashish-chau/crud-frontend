@@ -1,28 +1,43 @@
 import React, { useState } from 'react';
 import API from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Register.css'; // 👈 Make sure this path is correct
+import '../styles/Register.css';
 
 function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    // clear messages while typing
+    setSuccessMsg('');
+    setErrorMsg('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await API.post('/auth/register', form);
-      navigate('/login');
+      const response = await API.post('/auth/register', form);
+      setSuccessMsg(response.data.message || 'Registration successful');
+      setTimeout(() => navigate('/login'), 2000); // optional delay before redirect
     } catch (err) {
-      alert('Registration failed');
-      console.error(err);
+      const message = err.response?.data?.message || 'Registration failed';
+      setErrorMsg(message);
     }
   };
 
   return (
     <div className="register-container">
       <h2>Register</h2>
+
+      {/* ✅ Success Message Box */}
+      {successMsg && <div className="message success">{successMsg}</div>}
+
+      {/* ❌ Error Message Box */}
+      {errorMsg && <div className="message error">{errorMsg}</div>}
+
       <form onSubmit={handleSubmit}>
         <input name="name" placeholder="Name" onChange={handleChange} required />
         <input name="email" placeholder="Email" onChange={handleChange} required />

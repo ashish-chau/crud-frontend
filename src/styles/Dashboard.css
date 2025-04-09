@@ -88,3 +88,39 @@
     color: white;
   }
   
+  .user-info {
+    background-color: black;
+    border-left: 4px solid #007bff;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logout-button {
+    background-color: #ff5c5c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+
+  .filter-section {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .filter-section select {
+    padding: 6px;
+    border-radius: 4px;
+  }
+  

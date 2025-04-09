@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import API from '../services/api';
 import { logout } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Dashboard.css'; // Assuming you have a CSS file for styling
+import '../styles/Dashboard.css';
 
 function Dashboard() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: '', description: '', status: 'pending', dueDate: '' });
   const [editTaskId, setEditTaskId] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all');
   const navigate = useNavigate();
 
   const fetchTasks = async () => {
@@ -62,6 +63,11 @@ function Dashboard() {
     fetchTasks();
   }, []);
 
+  // Filtered tasks based on selected status
+  const filteredTasks = tasks.filter(
+    (task) => statusFilter === 'all' || task.status === statusFilter
+  );
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
@@ -100,13 +106,22 @@ function Dashboard() {
         <button onClick={handleSubmit}>{editTaskId ? 'Update Task' : 'Add Task'}</button>
       </div>
 
+      <div className="filter-section">
+        <label>Filter by Status: </label>
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="in-progress">In-Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+
       <ul className="task-list">
-        {tasks.map((task) => (
+        {filteredTasks.map((task) => (
           <li className="task-item" key={task.id}>
             <div>
               <strong>{task.title}</strong> - {task.description} - {task.status} - {task.dueDate.split('T')[0]}
             </div>
-            
             <div className="task-item-actions">
               <button className="edit-btn" onClick={() => handleEdit(task)}>Edit</button>
               <button className="delete-btn" onClick={() => handleDelete(task.id)}>Delete</button>
